@@ -1,0 +1,63 @@
+/* static/css/components.css */
+
+/* Entfernt den Umriss bei Fokus auf der gesamten App und allen Buttons */
+.App:focus,
+button:focus {
+    outline: none; /* Entfernt den Standardfokus-Umriss */
+}
+
+/* Stile für die Anzeige des Spielstands */
+.in-game-score {
+    display: flex; /* Verwendet Flexbox für die Anordnung der Elemente */
+    justify-content: center; /* Zentriert die Elemente horizontal */
+    text-align: center; /* Zentriert den Text */
+}
+
+/* Stile für den Container der verbleibenden gültigen Wörter */
+.valid-words-remaining-container {
+    margin-right: 20px; /* Rechter Außenabstand */
+}
+
+/* Stile für die Anzeige der Punktzahl */
+.in-game-score .score-count {
+    font-size: 2em; /* Vergrößerte Schriftgröße */
+    margin-bottom: 15px; /* Untermargin */
+}
+
+/* Stile für den Zurücknahme-Link */
+.show-undo-link {
+    color: #0000EE; /* Blaue Textfarbe */
+    text-decoration: underline; /* Unterstrichener Text */
+    cursor: pointer; /* Cursor als Zeiger, zeigt Interaktivität */
+}
+
+/* Stile für das abgerundete Eingabefeld */
+.input-rounded {
+    border-radius: 15px; /* Abgerundete Ecken */
+    padding: 10px; /* Innenabstand */
+    border: 2px solid #ccc; /* Rand des Eingabefelds */
+    outline: none; /* Entfernt den Standardfokus-Umriss */
+}
+
+/* Stile für das Eingabefeld bei Fokus */
+.input-rounded:focus {
+    border-color: #66afe9; /* Ändert die Randfarbe bei Fokus */
+    box-shadow: 0 0 8px rgba(102, 175, 233, .6); /* Schatten um das Eingabefeld bei Fokus */
+}
+
+/* Stile für die Schriftgröße und Farbe der Punktzahl */
+.score-count {
+    font-size: 2em; /* Größere Schriftgröße */
+    color: green; /* Grüne Farbe für Zahlen */
+}
+
+/* Spezifische Stile für "Übrige Wörter" und "Verbliebene Zurücknahme" */
+.words-left-count, .undo-count {
+    font-size: 2em; /* Größere Schriftgröße */
+    margin-top: 10px; /* Abstand zum Text oben */
+}
+
+/* Grünfarbige Textanzeige für "Übrige Wörter" */
+.words-left-count {
+    color: green; /* Grüne Farbe */
+}

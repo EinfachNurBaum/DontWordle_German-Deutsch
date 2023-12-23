@@ -1,0 +1,62 @@
+/* static/css/layout.css */
+
+/* Container für das gesamte Spiel-Layout */
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr; /* 5 Spalten */
+    grid-template-rows: auto auto 1fr auto auto auto; /* Kopfzeile, Labels, Buchstabenboxen, Platzhalter, Textbox */
+    gap: 10px;
+    justify-items: center;
+    align-items: center;
+    height: 100vh;
+}
+
+/* Stile für die Labels "Übrige Wörter" und "Verbliebene Zurücknahme" */
+.words-left {
+    grid-column: 2; /* Platziert in der zweiten Spalte */
+    grid-row: 2; /* Zweite Zeile */
+    text-align: center;
+}
+
+.words-right {
+    grid-column: 4; /* Platziert in der vierten Spalte */
+    grid-row: 2; /* Zweite Zeile */
+    text-align: center;
+}
+
+/* Stile für das Grid, das die Buchstabenboxen enthält */
+.game-grid {
+    grid-column: 3; /* Platziert das Grid in der dritten Spalte */
+    grid-row: 3; /* Dritte Zeile */
+    display: grid;
+    gap: 5px;
+}
+
+/* Stile für jede Reihe innerhalb des Buchstabenbox-Grids */
+.game-row {
+    display: flex; /* Verwendet Flexbox für die Anordnung der Elemente innerhalb der Reihe */
+}
+
+/* Stile für jede einzelne Buchstabenbox */
+.game-cell {
+    width: 60px;
+    height: 60px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    margin: 7px;
+    display: flex; /* Flexbox für zentrierte Ausrichtung */
+    justify-content: center; /* Horizontale Zentrierung */
+    align-items: center; /* Vertikale Zentrierung */
+    font-size: 38px; /* Größere Schriftgröße für Sichtbarkeit */
+    text-transform: uppercase; /* Großbuchstaben */
+    /* Optional weitere Stile wie Schriftart und Farbe */
+}
+
+/* Stile für das Eingabefeld */
+.input-box {
+    grid-column: 3; /* Platziert das Eingabefeld in der dritten Spalte */
+    grid-row: 5; /* Platziert das Eingabefeld in der fünften Zeile */
+}
+
+
+

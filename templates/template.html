@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="theme-color" content="#000000"/>
+    <meta name="description" content="{{ description }}"/>
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layout.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/components.css') }}">
+
+</head>
+<body>
+    <!-- Stand 19. November -->
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <!-- Ihr Spiel-Root-Element -->
+    <div id="root">
+        <!-- Hier kommt Spiel-Content -->
+        {{ game_content | safe }}
+    </div>
+
+    <!-- Einbinden der externen JavaScript-Datei -->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>

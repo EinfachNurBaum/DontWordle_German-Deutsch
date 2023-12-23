@@ -1,0 +1,17 @@
+/* static/css/base.css */
+
+/* Grundlegende Stildefinitionen für den gesamten Körper der Webseite */
+body {
+    margin: 0; /* Entfernt den Standardrand */
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif; /* Setzt die Schriftart für die Webseite */
+    -webkit-font-smoothing: antialiased; /* Verbessert die Schriftglättung in WebKit-Browsern */
+    -moz-osx-font-smoothing: grayscale; /* Verbessert die Schriftglättung in Firefox auf macOS */
+}
+
+/* Stildefinitionen für <code>-Tags */
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace; /* Spezifische Schriftart für Code-Elemente */
+}
+
