@@ -36,7 +36,7 @@ def home():
     </div>
     """
     print(os.getcwd())
-    return render_template('./template.html', title='Nicht wördeln!', game_content=game_content)
+    return render_template('template.html', title='Nicht wördeln!', game_content=game_content)
 
 
 @app.route('/check_word', methods=['POST'])

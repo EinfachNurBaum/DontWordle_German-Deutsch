@@ -1,5 +1,4 @@
 let cell_row = 5;
-let cell_row_2 = 5;
 
 document.addEventListener('DOMContentLoaded', function() {
     const inputBox = document.getElementById('textbox');
