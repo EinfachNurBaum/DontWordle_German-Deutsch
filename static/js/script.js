@@ -53,7 +53,7 @@ function checkWord(inputWord, row) {
                 cell.textContent = info.letter;
                 if (info.status === 'correct') {
                     cell.style.backgroundColor = 'green';
-                } else if (info.status === 'almost') {
+                } else if (info.status === 'maybe') {
                     cell.style.backgroundColor = 'yellow';
                 } else if (info.status === 'incorrect') {
                     cell.style.backgroundColor = '#ccc'; // Grauer Hintergrund für "incorrect"

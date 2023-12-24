@@ -7,9 +7,13 @@ app = Flask(__name__)
 
 words = ["Stern", "Stand", "Stamm", "Stein", "Staub", "Sturm", "Stadt", "Stufe", "Stiel", "Blatt",
          "Blüte", "Block", "Blase", "Blick", "Blech", "Blend", "Blitz", "Bleib", "Rasch", "Hasse"]
-TARGET_WORD = "Stern"
 possible_words = words.copy()
+# SPÄTER BEARBEITEN / TODO: Die daten schon in uppercase speichern und zeile löschen
+possible_words = [word.upper() for word in possible_words]
 
+TARGET_WORD = choice(possible_words)
+
+first_round = True
 
 @app.route('/')
 def home():
@@ -41,25 +45,49 @@ def home():
 
 @app.route('/check_word', methods=['POST'])
 def check_word():
+    global first_round
     global TARGET_WORD  # import Target word
     global possible_words  # import possible words
     user_input = request.json['word'].upper()  # import user input
     feedback = []  # the list that will send to user
 
-    # RegEx-Pattern
-    pattern = ""
+    # Zählen, wie oft jeder Buchstabe im Zielwort vorkommt
+    letter_counts = {char: TARGET_WORD.count(char) for char in set(TARGET_WORD)}
 
+    # RegEx-Pattern
+    pattern = "^"
     for i, char in enumerate(user_input):
-        if char == TARGET_WORD[i].upper():
-            pattern += char  # Buchstabe ist korrekt und an der richtigen Stelle
-            feedback.append({'letter': char, 'position': i, 'status': 'correct'})
+
+        if char == TARGET_WORD[i]:
+            # Richtiger Buchstabe an der richtigen Stelle
+            feedback.append({"letter": char, "position": i, "status": "correct"})
+            letter_counts[char] -= 1
+            pattern += char
+
+        elif char in TARGET_WORD and letter_counts[char] >= 1:
+            # Buchstabe ist im Wort, aber an falscher Stelle
+            feedback.append({"letter": char, "position": i, "status": "maybe"})
+            letter_counts[char] -= 1
+            pattern += "(?!{})".format(char)  # RegEx sagt wort enthält char, aber nicht an der Stelle i
+
         else:
-            pattern += '.'  # Buchstabe ist unbestimmt
+            # Buchstabe nicht im Wort
+            feedback.append({"letter": char, "position": i, "status": "incorrect"})
+            pattern += "." # RegEx sagt wort enthält beliebigen Buchstaben
+
+    pattern += "$"  # Ende des Regex-Musters
 
     # Filtern der möglichen Wörter
     possible_words = [word for word in possible_words if re.fullmatch(pattern, word)]
 
-    """ Mockdaten
+    # Wählen eines neuen Zielworts für die nächste Runde
+    if not first_round:
+        new_word(False)
+    else:
+        first_round = False
+        new_word(first_round)
+
+    """ Daten für die Rückgabe Beispiel:
     info = {
         "info": [
         {"letter": "S", "position": 0, "status": "correct"},
@@ -70,13 +98,22 @@ def check_word():
     ]
     }
     return jsonify(info)"""
-    print(f"{feedback} und {len(possible_words)}")
+    # print(f"{feedback} und {len(possible_words)}, wurde mit {pattern} gefiltert")
     return jsonify({'info': feedback, 'possible_words': len(possible_words)})
 
 
-def new_word():
+# Neues Zielwort auswählen
+def new_word(first_round):
     global TARGET_WORD
-    TARGET_WORD = choice(words)
+    global possible_words
+
+    if not first_round:
+        if TARGET_WORD in possible_words:
+            possible_words.remove(TARGET_WORD)  # Entfernen des aktuellen Zielworts aus der Liste, falls vorhanden
+
+    if possible_words:  # Überprüfen, ob die Liste noch Elemente enthält
+        TARGET_WORD = choice(possible_words)  # Wählen eines neuen Zielworts
+        possible_words.append(TARGET_WORD)  # Hinzufügen des neuen Zielworts zur Liste
 
 
 if __name__ == '__main__':
