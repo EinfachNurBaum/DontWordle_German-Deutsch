@@ -2,9 +2,9 @@
 
 ## Projektbeschreibung
 
-DON'T WORDLE ist eine Variante des beliebten Worträtselspiels Wordle, bei dem du versuchen musst, das geheime Wort zu erraten. Dieses Projekt befindet sich derzeit in der Entwicklung und wird kontinuierlich verbessert.
+DON'T WORDLE ist eine Variante des beliebten Worträtselspiels Wordle, bei dem du versuchen musst, das geheime Wort zu erraten. Dieses Projekt befindet sich derzeit in der Entwicklung und wird unregelmäßig weiterentwickelt.
 
-## Anleitung
+## Anleitung (Aktuell)
 
 ### Schritt-für-Schritt-Anleitung für das Ausführen der Flask-App
 
