@@ -25,7 +25,10 @@ document.addEventListener('DOMContentLoaded', function() {
 function checkWord(inputWord, row) {
     fetch('/check_word', {
         method: 'POST',
-        body: JSON.stringify({ word: inputWord }),
+        body: JSON.stringify({
+            word: inputWord,
+            cell_row: row
+        }),
         headers: {
             'Content-Type': 'application/json'
         }
@@ -42,6 +45,12 @@ function checkWord(inputWord, row) {
                 wordsLeftCount.textContent = '0';
             }
         }
+
+        if (data.game_status === 'win' || data.game_status === 'lose') {
+            // Setzen des letzten Worts und Aktivieren der Teilen-Funktion
+            setFinalWord(TARGET_WORD); // Ersetzen Sie TARGET_WORD durch die tatsächliche Variable, die das letzte Wort enthält
+        }
+
         else {
             console.error('data.possible_words existiert nicht!')
             wordsLeftCount.textContent = '0';
@@ -64,4 +73,22 @@ function checkWord(inputWord, row) {
         console.log('Mögliche Wörter:', data.possible_words);
     })
     .catch(error => console.error('Fehler:', error));
+}
+
+function triggerConfetti() {
+    confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 }
+    });
+}
+
+
+function setFinalWord(word) {
+    document.getElementById('final-word').textContent = word;
+}
+
+function shareResults() {
+    // Logik zum Teilen der Ergebnisse
+    // Beispiel: Kopieren des letzten Worts in die Zwischenablage oder Teilen über soziale Medien
 }

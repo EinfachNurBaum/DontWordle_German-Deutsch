@@ -15,6 +15,7 @@ TARGET_WORD = choice(possible_words)
 
 first_round = True
 
+
 @app.route('/')
 def home():
     word_count = len(words)
@@ -37,6 +38,12 @@ def home():
         
         <!-- Eingabefeld: Textfeld, in das der Benutzer tippt -->
         <div class='input-box'><input type='text' class='input-rounded' id='textbox' autofocus></div>
+        
+        <!-- Neue Box für das letzte Wort und den Teilen-Button -->
+        <div class='final-word-container'>
+            <div class='final-word'>Letztes Wort: <span id='final-word'></span></div>
+                <button class='share-button' onclick='shareResults()'>Teilen</button>
+        </div>
     </div>
     """
     print(os.getcwd())
@@ -49,6 +56,7 @@ def check_word():
     global TARGET_WORD  # import Target word
     global possible_words  # import possible words
     user_input = request.json['word'].upper()  # import user input
+    cell_row = data['cell_row']  # Empfangen der cell_row Information vom Frontend
     feedback = []  # the list that will send to user
 
     # Zählen, wie oft jeder Buchstabe im Zielwort vorkommt
@@ -73,7 +81,7 @@ def check_word():
         else:
             # Buchstabe nicht im Wort
             feedback.append({"letter": char, "position": i, "status": "incorrect"})
-            pattern += "." # RegEx sagt wort enthält beliebigen Buchstaben
+            pattern += "."  # RegEx sagt wort enthält beliebigen Buchstaben
 
     pattern += "$"  # Ende des Regex-Musters
 
@@ -87,19 +95,23 @@ def check_word():
         first_round = False
         new_word(first_round)
 
-    """ Daten für die Rückgabe Beispiel:
-    info = {
-        "info": [
-        {"letter": "S", "position": 0, "status": "correct"},
-        {"letter": "T", "position": 1, "status": "incorrect"},
-        {"letter": "E", "position": 2, "status": "maybe"},
-        {"letter": "R", "position": 3, "status": "maybe"},
-        {"letter": "N", "position": 4, "status": "correct"}
-    ]
-    }
-    return jsonify(info)"""
-    # print(f"{feedback} und {len(possible_words)}, wurde mit {pattern} gefiltert")
-    return jsonify({'info': feedback, 'possible_words': len(possible_words)})
+        # Ermitteln des finalen Worts
+    final_word = TARGET_WORD if len(possible_words) <= 1 else None
+
+    # Überprüfung auf Gewinn oder Verlust und Rückgabe des finalen Worts
+    if len(possible_words) == 1 and user_input == TARGET_WORD:
+        game_status = 'win'
+    elif cell_row == 0 and user_input != TARGET_WORD:
+        game_status = 'lose'
+    else:
+        game_status = 'continue'
+
+    return jsonify({
+        'info': feedback,
+        'possible_words': len(possible_words),
+        'game_status': game_status,
+        'final_word': final_word
+    })
 
 
 # Neues Zielwort auswählen
@@ -113,7 +125,6 @@ def new_word(first_round):
 
     if possible_words:  # Überprüfen, ob die Liste noch Elemente enthält
         TARGET_WORD = choice(possible_words)  # Wählen eines neuen Zielworts
-        possible_words.append(TARGET_WORD)  # Hinzufügen des neuen Zielworts zur Liste
 
 
 if __name__ == '__main__':

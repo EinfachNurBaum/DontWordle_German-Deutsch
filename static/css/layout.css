@@ -59,4 +59,33 @@
 }
 
 
+/* Zusätzliche Stile für das letzte Wort und den Teilen-Button */
+.final-word-container {
+    margin-top: 20px;
+    text-align: center;
+}
 
+.final-word {
+    font-size: 1em; /* Passen Sie die Schriftgröße nach Bedarf an */
+    color: #333; /* Dunkle Schriftfarbe für bessere Lesbarkeit */
+    margin-bottom: 10px; /* Abstand zwischen Text und Button */
+}
+
+.share-button {
+    background-color: #4CAF50; /* Grüner Hintergrund */
+    color: white; /* Weiße Schrift */
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px; /* Abgerundete Ecken */
+}
+
+/* Hover-Effekt für den Teilen-Button */
+.share-button:hover {
+    background-color: #45a049; /* Etwas dunkleres Grün */
+}
