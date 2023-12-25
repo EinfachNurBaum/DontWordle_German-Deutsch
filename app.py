@@ -56,7 +56,7 @@ def check_word():
     global TARGET_WORD  # import Target word
     global possible_words  # import possible words
     user_input = request.json['word'].upper()  # import user input
-    cell_row = data['cell_row']  # Empfangen der cell_row Information vom Frontend
+    cell_row = request.json['cell_row']  # Empfangen der cell_row Information vom Frontend
     feedback = []  # the list that will send to user
 
     # Zählen, wie oft jeder Buchstabe im Zielwort vorkommt
