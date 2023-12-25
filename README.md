@@ -35,10 +35,8 @@ python app.py
 
 Für Entwickler und technisch Interessierte bieten wir eine kurze Übersicht über die technische Seite des Projekts:
 
-- **Frontend**: Das Frontend ist mit HTML, CSS und JavaScript entwickelt. Die Benutzeroberfläche verwendet Grid Layouts und Flexbox für ein ansprechendes Design. Das Desin habe ich mit chatGPT gemacht, weil kein bock auf frontend machen, ohne bezahlt zu werden.
+- **Frontend**: Das Frontend ist mit HTML, CSS und JavaScript entwickelt. Die Benutzeroberfläche verwendet Grid Layouts und Flexbox für ein ansprechendes Design. Das Design habe ich mit chatGPT gemacht, weil ich kein bock habe frontend machen, ohne bezahlt zu werden.
 
 - **Backend**: Das Backend verwendet Flask, ein Python-Framework, um die Spiellogik zu verwalten. Die Kommunikation zwischen Frontend und Backend erfolgt über AJAX-Anfragen.
 
 - **Spiellogik**: Das Spiel verwendet Reguläre Ausdrücke, um Benutzereingaben mit dem geheimen Wort zu vergleichen und Feedback zu generieren. Die verfügbaren Wörter werden dynamisch gefiltert.
-
-- **In Entwicklung**: Das Projekt ist noch nicht abgeschlossen und wird kontinuierlich verbessert. Neue Funktionen und Fehlerkorrekturen sind geplant.
