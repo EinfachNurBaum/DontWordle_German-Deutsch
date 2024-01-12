@@ -37,20 +37,23 @@ function checkWord(inputWord, row) {
     .then(data => {
         // Aktualisieren der Anzahl der verbleibenden Wörter im Frontend
         let wordsLeftCount = document.getElementById('words-left-count');
-        if (data.possible_words) {
+        if (data.possible_words || data.possible_words === 0) {
+            console.log('Mögliche Wörter Anzahl:', data.possible_words)
+            console.log('Typ von data.possible_words:', typeof data.possible_words)
             if (typeof data.possible_words === 'number') {
+                console.log('data.possible_words ist ein int!')
                 wordsLeftCount.textContent = data.possible_words.toString();
             } else {
                 console.error('Fehler: data.possible_words ist kein int!');
                 wordsLeftCount.textContent = '0';
             }
-        }
 
-        if (data.game_status === 'win' || data.game_status === 'lose') {
-            // Setzen des letzten Worts und Aktivieren der Teilen-Funktion
-            setFinalWord(TARGET_WORD); // Ersetzen Sie TARGET_WORD durch die tatsächliche Variable, die das letzte Wort enthält
+            if (data.game_status === 'win' || data.game_status === 'lose') {
+                // Setzen dem letzten Wort
+                console.log('Game Status:', data.game_status);
+                afterGameResult(data.final_word, data.game_status); // Ersetzen Sie TARGET_WORD durch die tatsächliche Variable, die das letzte Wort enthält
+            }
         }
-
         else {
             console.error('data.possible_words existiert nicht!')
             wordsLeftCount.textContent = '0';
@@ -77,15 +80,31 @@ function checkWord(inputWord, row) {
 
 function triggerConfetti() {
     confetti({
-        particleCount: 100,
-        spread: 70,
-        origin: { y: 0.6 }
+        particleCount: 150,
+        spread: 180,
+        origin: { y: 0.5, x: 0.75}
+    });
+    confetti({
+        particleCount: 150,
+        spread: 200,
+        origin: { y: 0.5, x: 0.25}
     });
 }
 
 
-function setFinalWord(word) {
+function afterGameResult(word, gameStatus) {
     document.getElementById('final-word').textContent = word;
+    const shareButton = document.querySelector('.share-button');
+    const finalWordContainer = document.querySelector('.final-word-container');
+
+    // Container und Teilen-Button sichtbar machen
+    finalWordContainer.style.display = 'block';
+    shareButton.style.display = 'block';
+
+    // Konfetti nur bei einem Gewinn auslösen
+    if (gameStatus === 'win') {
+        triggerConfetti();
+    }
 }
 
 function shareResults() {

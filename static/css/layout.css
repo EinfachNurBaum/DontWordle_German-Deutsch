@@ -61,7 +61,12 @@
 
 /* Zusätzliche Stile für das letzte Wort und den Teilen-Button */
 .final-word-container {
-    margin-top: 20px;
+    grid-column: 3; /* Platziert den Container in der mittleren Spalte */
+    grid-row: 7; /* Neue Zeile unterhalb des Spielgitters */
+    display: none; /* Versteckt den Container standardmäßig */
+    justify-self: center; /* Zentriert den Container in seiner Spalte */
+    width: 100%; /* Lässt den Container die gesamte Spaltenbreite ausfüllen */
+    margin-top: 20px; /* Abstand nach oben */
     text-align: center;
 }
 
@@ -78,14 +83,15 @@
     padding: 10px 20px;
     text-align: center;
     text-decoration: none;
-    display: inline-block;
+    display: block; /* Setzen Sie auf block, um den Button innerhalb des Containers anzuzeigen */
     font-size: 16px;
-    margin: 4px 2px;
+    margin: 4px auto; /* Zentriert den Button innerhalb des Containers */
     cursor: pointer;
     border-radius: 5px; /* Abgerundete Ecken */
 }
 
 /* Hover-Effekt für den Teilen-Button */
 .share-button:hover {
+    display: none;
     background-color: #45a049; /* Etwas dunkleres Grün */
 }
