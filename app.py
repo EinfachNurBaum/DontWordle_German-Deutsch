@@ -23,7 +23,6 @@ def prepare_game_start():
     possible_words = [word.upper() for word in possible_words]
 
     TARGET_WORD = choice(possible_words)
-    TARGET_WORD = "STERN"
     first_round = True
 
 
@@ -71,7 +70,6 @@ def check_word():
     user_input = request.json['word'].upper()  # import user input
     cell_row = request.json['cell_row']  # Empfangen der cell_row Information vom Frontend
     feedback = []  # the list that will send to user
-    TARGET_WORD = "STERN"
     # Zählen, wie oft jeder Buchstabe im Zielwort vorkommt
     letter_counts = {char: TARGET_WORD.count(char) for char in TARGET_WORD}
 
@@ -81,7 +79,6 @@ def check_word():
     pattern_green = "^"  # Für korrekte Buchstaben an der richtigen Stelle
     pattern_yellow_array = []  # Für korrekte Buchstaben an der falschen Stelle
 
-    TARGET_WORD = "STERN"
     print("Target word: " + TARGET_WORD)
 
     for i, char in enumerate(user_input):
