@@ -8,10 +8,12 @@ app = Flask(__name__)
 words = []
 possible_words = []
 TARGET_WORD = ""
+first_round = None
 
 
 def prepare_game_start():
     global words
+    global first_round
     global possible_words
     global TARGET_WORD
     words = ["Stern", "Stand", "Stamm", "Stein", "Staub", "Sturm", "Stadt", "Stufe", "Stiel", "Blatt",
@@ -21,7 +23,7 @@ def prepare_game_start():
     possible_words = [word.upper() for word in possible_words]
 
     TARGET_WORD = choice(possible_words)
-
+    TARGET_WORD = "STERN"
     first_round = True
 
 
@@ -69,15 +71,17 @@ def check_word():
     user_input = request.json['word'].upper()  # import user input
     cell_row = request.json['cell_row']  # Empfangen der cell_row Information vom Frontend
     feedback = []  # the list that will send to user
-
+    TARGET_WORD = "STERN"
     # Zählen, wie oft jeder Buchstabe im Zielwort vorkommt
     letter_counts = {char: TARGET_WORD.count(char) for char in TARGET_WORD}
+
 
     # RegEx-Pattern
     # Initialisieren der Regex-Patterns
     pattern_green = "^"  # Für korrekte Buchstaben an der richtigen Stelle
     pattern_yellow_array = []  # Für korrekte Buchstaben an der falschen Stelle
 
+    TARGET_WORD = "STERN"
     print("Target word: " + TARGET_WORD)
 
     for i, char in enumerate(user_input):
@@ -112,6 +116,22 @@ def check_word():
     for char in pattern_yellow_array:  # set() entfernt Duplikate, aber das wollen wir hier nicht, z.B. bei "Stamm"
         possible_words_yellow_filtered = [word for word in possible_words_green_filtered if char in word]
 
+    print(f'''
+    Target word: {TARGET_WORD}
+    User input: {user_input}
+    Feedback: {feedback}
+    Possible words: {possible_words}
+    Possible words green filtered: {possible_words_green_filtered}
+    Possible words yellow filtered: {possible_words_yellow_filtered}
+    green pattern: {pattern_green}
+    yellow pattern: {pattern_yellow_array}
+    first round: {first_round}
+    len possible words yellow filtered: {len(possible_words_yellow_filtered)}
+    ''')
+
+    # Liste der möglichen Wörter aktualisieren
+    possible_words = possible_words_yellow_filtered
+
     # Überprüfung auf Gewinn oder Verlust und Rückgabe des finalen Worts
     if len(possible_words_green_filtered) == 1 and user_input == TARGET_WORD:
         game_status = 'win'
@@ -120,30 +140,22 @@ def check_word():
     else:
         game_status = 'continue'
 
+
     # Wählen eines neuen Zielworts für die nächste Runde
-    if not first_round and game_status == 'continue':
-        new_word(False)
-    elif game_status == 'continue':
+    if first_round and game_status == 'continue':
         first_round = False
+        new_word(first_round)
+    elif game_status == 'continue':
         new_word(first_round)
 
     # Ermitteln des finalen Worts
     final_word = TARGET_WORD if len(possible_words_yellow_filtered) <= 1 else None
 
+
     print(f'''
-    Target word: {TARGET_WORD}
-    User input: {user_input}
-    Feedback: {feedback}
-    Possible words: {possible_words}
-    Possible words green filtered: {possible_words_green_filtered}
-    Possible words yellow filtered: {possible_words_yellow_filtered}
-    Game status: {game_status}
-    final word: {final_word}
-    green pattern: {pattern_green}
-    yellow pattern: {pattern_yellow_array}
-    first round: {first_round}
+    New Target word: {TARGET_WORD}
+    Final word: {final_word}
     game status: {game_status}
-    len possible words yellow filtered: {len(possible_words_yellow_filtered)}
     ''')
 
     return jsonify({
@@ -165,7 +177,6 @@ def new_word(first_round_param):
 
     if possible_words:  # Überprüfen, ob die Liste noch Elemente enthält
         TARGET_WORD = choice(possible_words)  # Wählen eines neuen Zielworts
-
 
 
 if __name__ == '__main__':
