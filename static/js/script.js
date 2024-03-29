@@ -103,6 +103,8 @@ function afterGameResult(word, gameStatus) {
 
     // Konfetti nur bei einem Gewinn auslösen
     if (gameStatus === 'win') {
+        const wordsLeftCount = document.getElementById('words-left-count');
+        wordsLeftCount.textContent = '0';
         triggerConfetti();
     }
 }

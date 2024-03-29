@@ -8,12 +8,10 @@ app = Flask(__name__)
 words = []
 possible_words = []
 TARGET_WORD = ""
-first_round = None
 
 
 def prepare_game_start():
     global words
-    global first_round
     global possible_words
     global TARGET_WORD
     words = ["Stern", "Stand", "Stamm", "Stein", "Staub", "Sturm", "Stadt", "Stufe", "Stiel", "Blatt",
@@ -23,7 +21,6 @@ def prepare_game_start():
     possible_words = [word.upper() for word in possible_words]
 
     TARGET_WORD = choice(possible_words)
-    first_round = True
 
 
 @app.route('/')
@@ -64,7 +61,6 @@ def home():
 
 @app.route('/check_word', methods=['POST'])
 def check_word():
-    global first_round
     global TARGET_WORD  # import Target word
     global possible_words  # import possible words
     user_input = request.json['word'].upper()  # import user input
@@ -72,7 +68,6 @@ def check_word():
     feedback = []  # the list that will send to user
     # Zählen, wie oft jeder Buchstabe im Zielwort vorkommt
     letter_counts = {char: TARGET_WORD.count(char) for char in TARGET_WORD}
-
 
     # RegEx-Pattern
     # Initialisieren der Regex-Patterns
@@ -108,8 +103,8 @@ def check_word():
     # Filtern der möglichen Wörter, die im Wort pattern_green Buchstaben haben, an der richtigen Stelle
     possible_words_green_filtered = [word for word in possible_words if re.fullmatch(pattern_green, word)]
 
-    # Filtern der möglichen Wörter, die im Wort pattern_yellow Buchstaben haben, an der zufälligen Stelle
-    possible_words_yellow_filtered = []
+    # Filtern den möglichen Wörtern. User input hatte richtige Buchstaben an der falschen Stelle
+    possible_words_yellow_filtered = possible_words_green_filtered
     for char in pattern_yellow_array:  # set() entfernt Duplikate, aber das wollen wir hier nicht, z.B. bei "Stamm"
         possible_words_yellow_filtered = [word for word in possible_words_green_filtered if char in word]
 
@@ -122,37 +117,36 @@ def check_word():
     Possible words yellow filtered: {possible_words_yellow_filtered}
     green pattern: {pattern_green}
     yellow pattern: {pattern_yellow_array}
-    first round: {first_round}
     len possible words yellow filtered: {len(possible_words_yellow_filtered)}
     ''')
+
+    if user_input in possible_words and len(possible_words_yellow_filtered) > 1:
+        possible_words_yellow_filtered.remove(
+            user_input)  # Entfernen des aktuellen Benutzerworts aus der Liste der möglichen Wörter
 
     # Liste der möglichen Wörter aktualisieren
     possible_words = possible_words_yellow_filtered
 
     # Überprüfung auf Gewinn oder Verlust und Rückgabe des finalen Worts
-    if len(possible_words_green_filtered) == 1 and user_input == TARGET_WORD:
+    if len(possible_words) == 1 and user_input == TARGET_WORD:
         game_status = 'win'
     elif cell_row == 0 and user_input != TARGET_WORD:
         game_status = 'lose'
     else:
         game_status = 'continue'
 
-
-    # Wählen eines neuen Zielworts für die nächste Runde
-    if first_round and game_status == 'continue':
-        first_round = False
-        new_word(first_round)
-    elif game_status == 'continue':
-        new_word(first_round)
+    TARGET_WORD = choice(possible_words)  # Wählen eines neuen Zielworts
 
     # Ermitteln des finalen Worts
     final_word = TARGET_WORD if len(possible_words_yellow_filtered) <= 1 else None
-
+    if final_word:
+        possible_words = []
 
     print(f'''
     New Target word: {TARGET_WORD}
     Final word: {final_word}
     game status: {game_status}
+    len possible words yellow filtered: {len(possible_words)}
     ''')
 
     return jsonify({
@@ -161,19 +155,6 @@ def check_word():
         'game_status': game_status,
         'final_word': final_word
     })
-
-
-# Neues Zielwort auswählen
-def new_word(first_round_param):
-    global TARGET_WORD
-    global possible_words
-
-    if not first_round_param:
-        if TARGET_WORD in possible_words:
-            possible_words.remove(TARGET_WORD)  # Entfernen des aktuellen Zielworts aus der Liste, falls vorhanden
-
-    if possible_words:  # Überprüfen, ob die Liste noch Elemente enthält
-        TARGET_WORD = choice(possible_words)  # Wählen eines neuen Zielworts
 
 
 if __name__ == '__main__':
