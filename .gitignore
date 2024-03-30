@@ -1,7 +1,5 @@
 /DontWordle/
-.idea/DontWordle_German-Deutsch.iml
-.idea/jsLibraryMappings.xml
-.idea/DontWordle_German-Deutsch.iml
-.idea/misc.xml
-*.xml
-*.iml
+__pycache__
+.git
+.idea
+*.pyc

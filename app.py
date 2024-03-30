@@ -8,6 +8,8 @@ app = Flask(__name__)
 words = []
 possible_words = []
 TARGET_WORD = ""
+final_word = None
+
 
 
 def prepare_game_start():
@@ -63,9 +65,12 @@ def home():
 def check_word():
     global TARGET_WORD  # import Target word
     global possible_words  # import possible words
+    global final_word  # import final word
+
     user_input = request.json['word'].upper()  # import user input
     cell_row = request.json['cell_row']  # Empfangen der cell_row Information vom Frontend
-    feedback = []  # the list that will send to user
+    feedback = []  # Feedback-Liste, die die USer inputs enthält
+
     # Zählen, wie oft jeder Buchstabe im Zielwort vorkommt
     letter_counts = {char: TARGET_WORD.count(char) for char in TARGET_WORD}
 
@@ -115,12 +120,14 @@ def check_word():
     Possible words: {possible_words}
     Possible words green filtered: {possible_words_green_filtered}
     Possible words yellow filtered: {possible_words_yellow_filtered}
+    possible words: {possible_words}
     green pattern: {pattern_green}
     yellow pattern: {pattern_yellow_array}
     len possible words yellow filtered: {len(possible_words_yellow_filtered)}
     ''')
 
-    if user_input in possible_words and len(possible_words_yellow_filtered) > 1:
+
+    if user_input in possible_words and len(possible_words_yellow_filtered) > 1 and final_word is None:
         possible_words_yellow_filtered.remove(
             user_input)  # Entfernen des aktuellen Benutzerworts aus der Liste der möglichen Wörter
 
@@ -139,19 +146,22 @@ def check_word():
 
     # Ermitteln des finalen Worts
     final_word = TARGET_WORD if len(possible_words_yellow_filtered) <= 1 else None
-    if final_word:
-        possible_words = []
 
     print(f'''
     New Target word: {TARGET_WORD}
     Final word: {final_word}
     game status: {game_status}
+<<<<<<< Updated upstream
     len possible words yellow filtered: {len(possible_words)}
+=======
+    len possible words: {len(possible_words)}
+    possible words: {possible_words}
+>>>>>>> Stashed changes
     ''')
 
     return jsonify({
         'info': feedback,
-        'possible_words': len(possible_words_yellow_filtered),
+        'possible_words': len(possible_words) if final_word is None else 0,
         'game_status': game_status,
         'final_word': final_word
     })
