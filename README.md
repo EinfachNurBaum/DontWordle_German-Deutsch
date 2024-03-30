@@ -40,3 +40,9 @@ Für Entwickler und technisch Interessierte bieten wir eine kurze Übersicht üb
 - **Backend**: Das Backend verwendet Flask, ein Python-Framework, um die Spiellogik zu verwalten. Die Kommunikation zwischen Frontend und Backend erfolgt über AJAX-Anfragen.
 
 - **Spiellogik**: Das Spiel verwendet Reguläre Ausdrücke, um Benutzereingaben mit dem geheimen Wort zu vergleichen und Feedback zu generieren. Die verfügbaren Wörter werden dynamisch gefiltert.
+
+### Todo
+- **Datenbank erstellen**
+- **app.py mit Datenbank arbeiten lassen**
+- **Verlieren testen**
+- **(Für später) Wörter Eingaben rückgängig machen**

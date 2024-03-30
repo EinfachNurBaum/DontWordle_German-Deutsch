@@ -1,4 +1,6 @@
 let cell_row = 5;
+let feedbackArray = []; // Zweidimensionales Array für das Feedback
+let UserHaveWon = null;
 
 document.addEventListener('DOMContentLoaded', function() {
     const inputBox = document.getElementById('textbox');
@@ -38,21 +40,19 @@ function checkWord(inputWord, row) {
         // Aktualisieren der Anzahl der verbleibenden Wörter im Frontend
         let wordsLeftCount = document.getElementById('words-left-count');
         if (data.possible_words || data.possible_words === 0) {
+
             console.log('Mögliche Wörter Anzahl:', data.possible_words)
             console.log('Typ von data.possible_words:', typeof data.possible_words)
-            if (typeof data.possible_words === 'number') {
-                console.log('data.possible_words ist ein int!')
-                wordsLeftCount.textContent = data.possible_words.toString();
-            } else {
-                console.error('Fehler: data.possible_words ist kein int!');
-                wordsLeftCount.textContent = '0';
-            }
+
+            wordsLeftCount.textContent = data.possible_words.toString();
 
             if (data.game_status === 'win' || data.game_status === 'lose') {
                 // Setzen dem letzten Wort
                 console.log('Game Status:', data.game_status);
-                afterGameResult(data.final_word, data.game_status); // Ersetzen Sie TARGET_WORD durch die tatsächliche Variable, die das letzte Wort enthält
+                afterGameResult(data.final_word, data.game_status); // Anzeigen des letzten Wortes und Auslösen von Konfetti
             }
+
+            feedbackArray.push(data);
         }
         else {
             console.error('data.possible_words existiert nicht!')
@@ -74,8 +74,7 @@ function checkWord(inputWord, row) {
         });
 
         console.log('Mögliche Wörter:', data.possible_words);
-    })
-    .catch(error => console.error('Fehler:', error));
+    }).catch(error => console.error('Fehler:', error));
 }
 
 function triggerConfetti() {
@@ -97,17 +96,50 @@ function afterGameResult(word, gameStatus) {
     const shareButton = document.querySelector('.share-button');
     const finalWordContainer = document.querySelector('.final-word-container');
 
+
     // Container und Teilen-Button sichtbar machen
     finalWordContainer.style.display = 'block';
     shareButton.style.display = 'block';
 
     // Konfetti nur bei einem Gewinn auslösen
     if (gameStatus === 'win') {
+        UserHaveWon = 'win';
         triggerConfetti();
+    }
+    else {
+        UserHaveWon = 'lose';
     }
 }
 
+// Wordle like Ergebnisse teilen
 function shareResults() {
+    let final_word = '';
+
     // Logik zum Teilen der Ergebnisse
-    // Beispiel: Kopieren des letzten Worts in die Zwischenablage oder Teilen über soziale Medien
+    console.log(feedbackArray);
+
+
+    let display = feedbackArray.map(row => row.info.map(feedback => {
+        if (row.final_word !== null) {
+            final_word = row.final_word;
+        }
+        if (feedback.status === 'correct') return '🟩';
+        if (feedback.status === 'maybe') return '🟨';
+        return '⬛';
+    }).join('')).join('\n');
+
+    if (UserHaveWon === 'win') {
+        display += '\n\nDas letzte Wort: ' + final_word + ' wurde in ' + String(feedbackArray.length) + ' Versuchen erraten.';
+    }
+    else if (UserHaveWon === 'lose') {
+        display += 'Ich bin scheiße!';
+    }
+
+    // In die Zwischenablage kopieren
+    navigator.clipboard.writeText(display).then(() => {
+        alert('Ergebnisse in die Zwischenablage kopiert!');
+    }).catch(err => {
+        console.error('Fehler beim Kopieren in die Zwischenablage:', err);
+    });
+
 }
