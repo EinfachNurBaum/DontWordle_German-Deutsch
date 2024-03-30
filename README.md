@@ -45,3 +45,4 @@ Für Entwickler und technisch Interessierte bieten wir eine kurze Übersicht üb
 - **Datenbank erstellen**
 - **app.py mit Datenbank arbeiten lassen**
 - **Verlieren testen**
+- **(Für später) Wörter Eingaben rückgängig machen**
