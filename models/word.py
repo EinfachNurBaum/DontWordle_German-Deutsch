@@ -1,3 +1,4 @@
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String
@@ -16,12 +17,17 @@ class Word(db.Model):
     word = Column(String(5), unique=True, nullable=False)
 
     def __init__(self, word: str) -> None:
-        self.word: str = word
+        self.word = word
 
 
 def create_tables():
     with app.app_context():
         db.create_all()
+
+
+if __name__ == "__main__":
+    create_tables()
+    app.run(debug=True)
 
 
 if __name__ == "__main__":
