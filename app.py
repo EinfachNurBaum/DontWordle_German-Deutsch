@@ -113,11 +113,13 @@ def check_word():
                 possible_words_yellow_filtered.remove(word)
 
     # Erstellen einer Liste die Wörter besitzt, die von den User gefundene doppele Buchstaben enthält
-    possible_words_prepared = []
-    for char in MultipleLetters.keys():
-        for word in possible_words_yellow_filtered:
-            if word.count(char) == MultipleLetters[char]:
-                possible_words_prepared.append(word)
+    if len(MultipleLetters) > 0:
+        possible_words_prepared = []
+        for char in MultipleLetters.keys():
+            for word in possible_words_yellow_filtered:
+                if word.count(char) == MultipleLetters[char]:
+                    if word not in possible_words_prepared:
+                        possible_words_prepared.append(word)
 
     possible_words = possible_words_prepared.copy()
 
