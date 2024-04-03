@@ -17,6 +17,7 @@ def prepare_game_start():
         possible_words = f.read().splitlines()
 
     TARGET_WORD = choice(possible_words)
+    TARGET_WORD = "BEBEN"
 
 
 @app.route('/')
@@ -111,19 +112,14 @@ def check_word():
             if char not in word:
                 possible_words_yellow_filtered.remove(word)
 
-    # Erstellen einer Liste, die alle nur EINMAL den Buchstaben von MultipleLetters enthält
-    notWantedWords = []
-    for char in MultipleLetters:
+    # Erstellen einer Liste die Wörter besitzt, die von den User gefundene doppele Buchstaben enthält
+    possible_words_prepared = []
+    for char in MultipleLetters.keys():
         for word in possible_words_yellow_filtered:
-            if word.count(char) == 1:
-                notWantedWords.append(word)
+            if word.count(char) == MultipleLetters[char]:
+                possible_words_prepared.append(word)
 
-    # Entfernen der Wörter, die in der notWantedWords-Liste enthalten sind
-    for word in notWantedWords:
-        if word in possible_words_yellow_filtered:
-            possible_words_yellow_filtered.remove(word)
-
-    possible_words = possible_words_yellow_filtered.copy()
+    possible_words = possible_words_prepared.copy()
 
     print(f'''
     Target word: {TARGET_WORD}
