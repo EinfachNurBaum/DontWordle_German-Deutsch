@@ -42,7 +42,5 @@ Für Entwickler und technisch Interessierte bieten wir eine kurze Übersicht üb
 - **Spiellogik**: Das Spiel verwendet Reguläre Ausdrücke, um Benutzereingaben mit dem geheimen Wort zu vergleichen und Feedback zu generieren. Die verfügbaren Wörter werden dynamisch gefiltert.
 
 ### Todo
-- **Datenbank erstellen**
-- **app.py mit Datenbank arbeiten lassen**
-- **Verlieren testen**
+- **Checken ob Wort in Datenbank vorhanden ist** 
 - **(Für später) Wörter Eingaben rückgängig machen**

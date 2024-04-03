@@ -139,7 +139,6 @@ def check_word():
     len possible words yellow filtered: {len(possible_words_yellow_filtered)}
     ''')
 
-    # TODO: Remove "user_input in possible_words"
     if user_input in possible_words and len(possible_words) > 1 and final_word is None:
         possible_words.remove(
             user_input)  # Entfernen des aktuellen Benutzerworts aus der Liste der möglichen Wörter
