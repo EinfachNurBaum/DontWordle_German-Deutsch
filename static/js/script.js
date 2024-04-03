@@ -132,7 +132,7 @@ function shareResults() {
         display += '\n\nDas letzte Wort: ' + final_word + ' wurde in ' + String(feedbackArray.length) + ' Versuchen erraten.';
     }
     else if (UserHaveWon === 'lose') {
-        display += 'Ich bin scheiße!';
+        display += '\nIch bin scheiße!';
     }
 
     // In die Zwischenablage kopieren

@@ -1,26 +1,20 @@
 from flask import Flask, render_template, jsonify, request
 from random import choice
-import os
 import re
 
 app = Flask(__name__)
 
-words = []
 possible_words = []
 TARGET_WORD = ""
 final_word = None
 
 
-
 def prepare_game_start():
-    global words
     global possible_words
     global TARGET_WORD
-    words = ["Stern", "Stand", "Stamm", "Stein", "Staub", "Sturm", "Stadt", "Stufe", "Stiel", "Blatt",
-             "Blüte", "Block", "Blase", "Blick", "Blech", "Blend", "Blitz", "Bleib", "Rasch", "Hasse"]
-    possible_words = words.copy()
-    # SPÄTER BEARBEITEN / TODO: Die daten schon in uppercase speichern und zeile löschen
-    possible_words = [word.upper() for word in possible_words]
+
+    with open('words.txt', 'r') as f:
+        possible_words = f.read().splitlines()
 
     TARGET_WORD = choice(possible_words)
 
@@ -57,7 +51,6 @@ def home():
         </div>
     </div>
     """
-    print(os.getcwd())
     return render_template('template.html', title='Nicht wördeln!', game_content=game_content)
 
 
@@ -72,7 +65,9 @@ def check_word():
     feedback = []  # Feedback-Liste, die die USer inputs enthält
 
     # Zählen, wie oft jeder Buchstabe im Zielwort vorkommt
-    letter_counts = {char: TARGET_WORD.count(char) for char in TARGET_WORD}
+    user_counts = {char: user_input.count(char) for char in user_input}
+
+    MultipleLetters = {}
 
     # RegEx-Pattern
     # Initialisieren der Regex-Patterns
@@ -86,17 +81,18 @@ def check_word():
         if char == TARGET_WORD[i]:
             # Richtiger Buchstabe an der richtigen Stelle
             feedback.append({"letter": char, "position": i, "status": "correct"})
-            letter_counts[char] -= 1
             pattern_green += char
+            if user_counts[char] > 1 and MultipleLetters.get(char) is None:
+                MultipleLetters[char] = user_counts[char]
 
-        elif (char in TARGET_WORD) and letter_counts[char] >= 1:
-            # Zur ner unbekannte wahrscheinlichkeit macht (char in TARGET_WORD) fehler, darum doppel checken wir
-            print(char, TARGET_WORD, char in TARGET_WORD)
+
+        elif char in TARGET_WORD:
             # Buchstabe ist im Wort, aber an falscher Stelle
             feedback.append({"letter": char, "position": i, "status": "maybe"})
             pattern_yellow_array.append(char)  # Stellt sicher, dass das Wort den Buchstaben irgendwo hat
-            letter_counts[char] -= 1
             pattern_green += "."  # Ersetzt den Platzhalter für die falsche Position
+            if user_counts[char] > 1 and MultipleLetters.get(char) is None:
+                MultipleLetters[char] = user_counts[char]
 
         else:
             # Buchstabe nicht im Wort
@@ -109,30 +105,44 @@ def check_word():
     possible_words_green_filtered = [word for word in possible_words if re.fullmatch(pattern_green, word)]
 
     # Filtern den möglichen Wörtern. User input hatte richtige Buchstaben an der falschen Stelle
-    possible_words_yellow_filtered = possible_words_green_filtered
-    for char in pattern_yellow_array:  # set() entfernt Duplikate, aber das wollen wir hier nicht, z.B. bei "Stamm"
-        possible_words_yellow_filtered = [word for word in possible_words_green_filtered if char in word]
+    possible_words_yellow_filtered = possible_words_green_filtered.copy()
+    for char in pattern_yellow_array:
+        for word in possible_words_yellow_filtered:
+            if char not in word:
+                possible_words_yellow_filtered.remove(word)
+
+    # Erstellen einer Liste, die alle nur EINMAL den Buchstaben von MultipleLetters enthält
+    notWantedWords = []
+    for char in MultipleLetters:
+        for word in possible_words_yellow_filtered:
+            if word.count(char) == 1:
+                notWantedWords.append(word)
+
+    # Entfernen der Wörter, die in der notWantedWords-Liste enthalten sind
+    for word in notWantedWords:
+        if word in possible_words_yellow_filtered:
+            possible_words_yellow_filtered.remove(word)
+
+    possible_words = possible_words_yellow_filtered.copy()
 
     print(f'''
     Target word: {TARGET_WORD}
     User input: {user_input}
     Feedback: {feedback}
-    Possible words: {possible_words}
-    Possible words green filtered: {possible_words_green_filtered}
-    Possible words yellow filtered: {possible_words_yellow_filtered}
-    possible words: {possible_words}
+    erste Possible words green filtered: {possible_words_green_filtered[:10]}
+    letzte Possible words green filtered: {possible_words_green_filtered[-10:]}
+    erste Possible words yellow filtered: {possible_words_yellow_filtered[:10]}
+    letzte Possible words yellow filtered: {possible_words_yellow_filtered[-10:]}
     green pattern: {pattern_green}
     yellow pattern: {pattern_yellow_array}
+    Liste der mehrmals vorkommenden Buchstaben: {MultipleLetters}
     len possible words yellow filtered: {len(possible_words_yellow_filtered)}
     ''')
 
-
-    if user_input in possible_words and len(possible_words_yellow_filtered) > 1 and final_word is None:
-        possible_words_yellow_filtered.remove(
+    # TODO: Remove "user_input in possible_words"
+    if user_input in possible_words and len(possible_words) > 1 and final_word is None:
+        possible_words.remove(
             user_input)  # Entfernen des aktuellen Benutzerworts aus der Liste der möglichen Wörter
-
-    # Liste der möglichen Wörter aktualisieren
-    possible_words = possible_words_yellow_filtered
 
     # Überprüfung auf Gewinn oder Verlust und Rückgabe des finalen Worts
     if len(possible_words) == 1 and user_input == TARGET_WORD:
@@ -148,15 +158,14 @@ def check_word():
     final_word = TARGET_WORD if len(possible_words_yellow_filtered) <= 1 else None
 
     print(f'''
+    NACH REMOVE!
     New Target word: {TARGET_WORD}
     Final word: {final_word}
     game status: {game_status}
-<<<<<<< Updated upstream
     len possible words yellow filtered: {len(possible_words)}
-=======
     len possible words: {len(possible_words)}
-    possible words: {possible_words}
->>>>>>> Stashed changes
+    erste 10 possible words: {possible_words[:10]}
+    letzte 10 possible words: {possible_words[-10:]}
     ''')
 
     return jsonify({
