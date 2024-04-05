@@ -1,4 +1,30 @@
 /* static/css/components.css */
+:root {
+    --background-color-light: #ffffff;
+    --background-color-dark: #333333;
+
+    --text-color-light: #000000;
+    --text-color-dark: #ffffff;
+
+    --accent-color-light: #007bff;
+    --accent-color-dark: #00e5ff;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: var(--background-color-dark);
+        --text-color: var(--text-color-dark);
+        --accent-color: var(--accent-color-dark);
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --background-color: var(--background-color-light);
+        --text-color: var(--text-color-light);
+        --accent-color: var(--accent-color-light);
+    }
+}
 
 /* Entfernt den Umriss bei Fokus auf der gesamten App und allen Buttons */
 .App:focus,
@@ -26,7 +52,7 @@ button:focus {
 
 /* Stile für den Zurücknahme-Link */
 .show-undo-link {
-    color: #0000EE; /* Blaue Textfarbe */
+    color: var(--accent-color); /* Blaue Textfarbe */
     text-decoration: underline; /* Unterstrichener Text */
     cursor: pointer; /* Cursor als Zeiger, zeigt Interaktivität */
 }
@@ -48,7 +74,7 @@ button:focus {
 /* Stile für die Schriftgröße und Farbe der Punktzahl */
 .score-count {
     font-size: 2em; /* Größere Schriftgröße */
-    color: green; /* Grüne Farbe für Zahlen */
+    color: var(--accent-color);
 }
 
 /* Spezifische Stile für "Übrige Wörter" und "Verbliebene Zurücknahme" */
