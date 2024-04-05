@@ -1,5 +1,44 @@
 /* static/css/layout.css */
 
+:root {
+    --background-color-light: #ffffff;
+    --background-color-dark: #212121;
+
+    --text-color-light: #000000;
+    --text-color-dark: #FFFFFF;
+
+    --accent-color-light: #008000;
+    --accent-color-dark: #008000;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background-color: var(--background-color-dark);
+        --text-color: var(--text-color-dark);
+        --accent-color: var(--accent-color-dark);
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --background-color: var(--background-color-light);
+        --text-color: var(--text-color-light);
+        --accent-color: var(--accent-color-light);
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --cell-font-color: #FFFFFF;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        --cell-font-color: #0096f5;
+    }
+}
+
 /* Container für das gesamte Spiel-Layout */
 .grid-container {
     display: grid;
@@ -16,12 +55,15 @@
     grid-column: 2; /* Platziert in der zweiten Spalte */
     grid-row: 2; /* Zweite Zeile */
     text-align: center;
+    color: var(--text-color);
+
 }
 
 .words-right {
     grid-column: 4; /* Platziert in der vierten Spalte */
     grid-row: 2; /* Zweite Zeile */
     text-align: center;
+    color: var(--text-color);
 }
 
 /* Stile für das Grid, das die Buchstabenboxen enthält */
@@ -49,6 +91,7 @@
     align-items: center; /* Vertikale Zentrierung */
     font-size: 38px; /* Größere Schriftgröße für Sichtbarkeit */
     text-transform: uppercase; /* Großbuchstaben */
+    color: var(--cell-font-color); /* Standardtextfarbe */
     /* Optional weitere Stile wie Schriftart und Farbe */
 }
 
@@ -56,6 +99,7 @@
 .input-box {
     grid-column: 3; /* Platziert das Eingabefeld in der dritten Spalte */
     grid-row: 5; /* Platziert das Eingabefeld in der fünften Zeile */
+    color: var(--accent-color);
 }
 
 
@@ -72,7 +116,7 @@
 
 .final-word {
     font-size: 1em; /* Passen Sie die Schriftgröße nach Bedarf an */
-    color: #333; /* Dunkle Schriftfarbe für bessere Lesbarkeit */
+    color: var(--text-color); /* Dunkle Schriftfarbe für bessere Lesbarkeit */
     margin-bottom: 10px; /* Abstand zwischen Text und Button */
 }
 

@@ -49,11 +49,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Funktion zum Laden der Wörterliste aus der Datenbankdatei
 function loadWordList() {
-    fetch('/../../words.txt') // Dies ist der Endpunkt, den Sie in Flask erstellen müssen, um die Wörterliste zu erhalten
-        .then(response => response.text())
+    fetch('/get_word_list') // Dies ist der Endpunkt, den Sie in Flask erstellen müssen, um die Wörterliste zu erhalten
+        .then(response => response.json())
         .then(data => {
             // Daten aufteilen und der wordList zuweisen
-            wordList = data.split('\n');
+            wordList = data.word_list;
+            console.log(wordList);
         })
         .catch(error => console.error('Fehler beim Laden der Wortliste:', error));
 }
@@ -102,13 +103,13 @@ function checkWord(inputWord, row) {
                 } else if (info.status === 'maybe') {
                     cell.style.backgroundColor = 'yellow';
                 } else if (info.status === 'incorrect') {
-                    cell.style.backgroundColor = '#ccc'; // Grauer Hintergrund für "incorrect"
+                    cell.style.backgroundColor = '#35393B'; // Grauer Hintergrund für "incorrect"
                 }
             }
         });
 
         console.log('Mögliche Wörter:', data.possible_words);
-    }).catch(error => console.error('Fehler:', error));
+    })
 }
 
 function triggerConfetti() {

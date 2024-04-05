@@ -1,13 +1,13 @@
 /* static/css/components.css */
 :root {
     --background-color-light: #ffffff;
-    --background-color-dark: #333333;
+    --background-color-dark: #212121;
 
     --text-color-light: #000000;
-    --text-color-dark: #ffffff;
+    --text-color-dark: #FFFFFF;
 
-    --accent-color-light: #007bff;
-    --accent-color-dark: #00e5ff;
+    --accent-color-light: #00A200;
+    --accent-color-dark: #00A200;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -63,6 +63,8 @@ button:focus {
     padding: 10px; /* Innenabstand */
     border: 2px solid #ccc; /* Rand des Eingabefelds */
     outline: none; /* Entfernt den Standardfokus-Umriss */
+    background: var(--background-color); /* Hintergrundfarbe */
+    color: var(--text-color); /* Textfarbe */
 }
 
 /* Stile für das Eingabefeld bei Fokus */
@@ -75,15 +77,4 @@ button:focus {
 .score-count {
     font-size: 2em; /* Größere Schriftgröße */
     color: var(--accent-color);
-}
-
-/* Spezifische Stile für "Übrige Wörter" und "Verbliebene Zurücknahme" */
-.words-left-count, .undo-count {
-    font-size: 2em; /* Größere Schriftgröße */
-    margin-top: 10px; /* Abstand zum Text oben */
-}
-
-/* Grünfarbige Textanzeige für "Übrige Wörter" */
-.words-left-count {
-    color: green; /* Grüne Farbe */
 }

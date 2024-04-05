@@ -7,19 +7,20 @@ from os import access, R_OK, stat
 app = None
 
 try:
-    app = Flask(__name__)
-except Exception as e:
-    logging.error("Die App konnte nicht initialisiert werden.\n" + str(e))
-    exit(1)
-
-try:
     logging.basicConfig(filename='app.log', level=logging.DEBUG)  # Konfigurieren des Loggings
+    logger = logging.getLogger('werkzeug')
+    logger.setLevel(logging.WARNING)
 except Exception as e:
     logging.error("Logging Datei access: " + str(access('app.log', R_OK)))
     logging.error("Logging Datei stat: " + str(stat('app.log')))
     logging.error("Die Logging Datei konnte nicht erstellt werden.\n" + str(e))
     exit(1)
 
+try:
+    app = Flask(__name__)
+except Exception as e:
+    logging.error("Die App konnte nicht initialisiert werden.\n" + str(e))
+    exit(1)
 
 logging.info("App started")
 logging.info("App sollte Berechtigung haben Dateien in aktuellen Verzeichnis zu lesen und zu schreiben.")
@@ -29,12 +30,10 @@ TARGET_WORD = ""
 final_word = None
 
 
-def prepare_game_start():
-    global possible_words
-    global TARGET_WORD
+def getWordListFromFile():
     try:
         with open('words.txt', 'r') as f:
-            possible_words = f.read().splitlines()
+            return f.read().splitlines()
     except Exception as e:
         logging.error("Logging Datei access: " + str(access('words.txt', R_OK)))
         if access('words.txt', R_OK):
@@ -42,6 +41,19 @@ def prepare_game_start():
         logging.error("Wenn könnte die Words.txt nicht gelesen, oder die Datei wurde gelöscht.\n" + str(e))
         print("Bitte die app.log Datei überprüfen.")
         exit(1)
+
+
+@app.route('/get_word_list')
+def get_word_list():
+    liste = getWordListFromFile()
+    return jsonify({'word_list': liste})
+
+
+def prepare_game_start():
+    global possible_words
+    global TARGET_WORD
+
+    possible_words = getWordListFromFile()
 
     if len(possible_words) == 0:
         logging.error("No words found in words.txt")
@@ -59,7 +71,7 @@ def home():
     game_content = """
     <div class='grid-container'>
         <!-- Übrige Wörter: Zeigt die Anzahl der verbleibenden Wörter an -->
-        <div class='words-left'>Übrige Wörter: <span class='score-count' id='words-left-count'>""" + f'{word_count}' + """</span></div>
+        <div class='words-left' >Übrige Wörter: <span class='score-count' id='words-left-count'>""" + f'{word_count}' + """</span></div>
         
         <!-- Verbliebene Zurücknahme: Zeigt die Anzahl der verbleibenden Zurücknahmen an -->
         <div class='words-right'>Verbliebene Zurücknahme: <span class='score-count' id='undo-count'>5</span></div>
@@ -151,6 +163,8 @@ def check_word():
                 if word.count(char) == MultipleLetters[char]:
                     if word not in possible_words_prepared:
                         possible_words_prepared.append(word)
+    else:
+        possible_words_prepared = possible_words_yellow_filtered.copy()
 
     possible_words = possible_words_prepared.copy()
 
@@ -198,7 +212,7 @@ def check_word():
 
     return jsonify({
         'info': feedback,
-        'possible_words': len(possible_words) if final_word is None else 0,
+        'possible_words': len(possible_words) if final_word is None and user_input is not final_word else 0,
         'game_status': game_status,
         'final_word': final_word
     })
@@ -210,13 +224,16 @@ if __name__ == '__main__':
         print("App gestartet unter http://127.0.0.1:5000/")
         print("Beachte http:// und nicht https:// in der URL.")
     except Exception as e:
-        logging.error("Die App konnte nicht gestartet werden. Wahrscheinlich ist der 5000er Port nicht frei \n" + str(e))
+        logging.error(
+            "Die App konnte nicht gestartet werden. Wahrscheinlich ist der 5000er Port nicht frei \n" + str(e))
         try:
             app.run(port=5001)
             print("App gestartet unter http://127.0.0.1:5000/")
             print("Beachte http:// und nicht https:// in der URL.")
         except Exception as e:
-            logging.error("Die App konnte nicht mit anderen Port gestartet werden. Bitte Port angeben, wenn dass das Problem war. \n" + str(e))
+            logging.error(
+                "Die App konnte nicht mit anderen Port gestartet werden. Bitte Port angeben, wenn dass das Problem war. \n" + str(
+                    e))
             print("Bitte die app.log Datei überprüfen.")
             exit(1)
 
