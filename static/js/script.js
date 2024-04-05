@@ -1,28 +1,59 @@
 let cell_row = 5;
 let feedbackArray = []; // Zweidimensionales Array für das Feedback
 let UserHaveWon = null;
+let wordList = [];
 
 document.addEventListener('DOMContentLoaded', function() {
+    loadWordList();
     const inputBox = document.getElementById('textbox');
+
     inputBox.addEventListener('keyup', function(event) {
         if (event.key === 'Enter') {
             let inputText = inputBox.value;
-            if (inputText.length === 5) {
-                for (let i = 0; i < 5; i++) {
-                    let cell = document.getElementById('cell-'+ cell_row +'-' + i);
-                    if (cell) {
-                        cell.textContent = inputText[i].toUpperCase();
+            if (wordList.includes(inputText.toUpperCase()))
+            {
+                if (inputText.length === 5) {
+                    for (let i = 0; i < 5; i++) {
+                        let cell = document.getElementById('cell-'+ cell_row +'-' + i);
+                        if (cell) {
+                            cell.textContent = inputText[i].toUpperCase();
+                        }
                     }
+                    inputBox.value = ''; // Textbox leeren
+
+                    // Hier senden wir die Eingabe an das Backend
+                    checkWord(inputText, cell_row);
+                    cell_row--;
                 }
+            }
+            else {
                 inputBox.value = ''; // Textbox leeren
 
-                // Hier senden wir die Eingabe an das Backend
-                checkWord(inputText, cell_row);
-                cell_row--;
+                // Animation für falsche Eingabe
+                anime({
+                    targets: inputBox,
+                    translateX: [
+                        { value: 10, duration: 100 },
+                        { value: -10, duration: 100 },
+                        { value: 0, duration: 100 }
+                    ],
+                });
+
             }
         }
     });
 });
+
+// Funktion zum Laden der Wörterliste aus der Datenbankdatei
+function loadWordList() {
+    fetch('/../../words.txt') // Dies ist der Endpunkt, den Sie in Flask erstellen müssen, um die Wörterliste zu erhalten
+        .then(response => response.text())
+        .then(data => {
+            // Daten aufteilen und der wordList zuweisen
+            wordList = data.split('\n');
+        })
+        .catch(error => console.error('Fehler beim Laden der Wortliste:', error));
+}
 
 function checkWord(inputWord, row) {
     fetch('/check_word', {
