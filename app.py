@@ -207,11 +207,14 @@ def check_word():
 if __name__ == '__main__':
     try:
         app.run()
+        print("App gestartet unter http://127.0.0.1:5000/")
         print("Beachte http:// und nicht https:// in der URL.")
     except Exception as e:
         logging.error("Die App konnte nicht gestartet werden. Wahrscheinlich ist der 5000er Port nicht frei \n" + str(e))
         try:
             app.run(port=5001)
+            print("App gestartet unter http://127.0.0.1:5000/")
+            print("Beachte http:// und nicht https:// in der URL.")
         except Exception as e:
             logging.error("Die App konnte nicht mit anderen Port gestartet werden. Bitte Port angeben, wenn dass das Problem war. \n" + str(e))
             print("Bitte die app.log Datei überprüfen.")
