@@ -18,6 +18,9 @@ document.addEventListener('DOMContentLoaded', function() {
                         if (cell) {
                             cell.textContent = inputText[i].toUpperCase();
                         }
+                        else {
+                            console.error('Zelle nicht gefunden:', 'cell-'+ cell_row +'-' + i);
+                        }
                     }
                     inputBox.value = ''; // Textbox leeren
 

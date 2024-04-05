@@ -1,8 +1,28 @@
 from flask import Flask, render_template, jsonify, request
 from random import choice
 import re
+import logging
+from os import access, R_OK, stat
 
-app = Flask(__name__)
+app = None
+
+try:
+    app = Flask(__name__)
+except Exception as e:
+    logging.error("Die App konnte nicht initialisiert werden.\n" + str(e))
+    exit(1)
+
+try:
+    logging.basicConfig(filename='app.log', level=logging.DEBUG)  # Konfigurieren des Loggings
+except Exception as e:
+    logging.error("Logging Datei access: " + str(access('app.log', R_OK)))
+    logging.error("Logging Datei stat: " + str(stat('app.log')))
+    logging.error("Die Logging Datei konnte nicht erstellt werden.\n" + str(e))
+    exit(1)
+
+
+logging.info("App started")
+logging.info("App sollte Berechtigung haben Dateien in aktuellen Verzeichnis zu lesen und zu schreiben.")
 
 possible_words = []
 TARGET_WORD = ""
@@ -12,12 +32,23 @@ final_word = None
 def prepare_game_start():
     global possible_words
     global TARGET_WORD
+    try:
+        with open('words.txt', 'r') as f:
+            possible_words = f.read().splitlines()
+    except Exception as e:
+        logging.error("Logging Datei access: " + str(access('words.txt', R_OK)))
+        if access('words.txt', R_OK):
+            logging.error("Logging Datei stat: " + str(stat('words.txt')))
+        logging.error("Wenn könnte die Words.txt nicht gelesen, oder die Datei wurde gelöscht.\n" + str(e))
+        print("Bitte die app.log Datei überprüfen.")
+        exit(1)
 
-    with open('words.txt', 'r') as f:
-        possible_words = f.read().splitlines()
+    if len(possible_words) == 0:
+        logging.error("No words found in words.txt")
+        print("Bitte die app.log Datei überprüfen.")
+        exit(1)
 
     TARGET_WORD = choice(possible_words)
-    TARGET_WORD = "BEBEN"
 
 
 @app.route('/')
@@ -75,7 +106,7 @@ def check_word():
     pattern_green = "^"  # Für korrekte Buchstaben an der richtigen Stelle
     pattern_yellow_array = []  # Für korrekte Buchstaben an der falschen Stelle
 
-    print("Target word: " + TARGET_WORD)
+    logging.debug("Target word: " + TARGET_WORD)
 
     for i, char in enumerate(user_input):
 
@@ -123,7 +154,7 @@ def check_word():
 
     possible_words = possible_words_prepared.copy()
 
-    print(f'''
+    logging.debug(f'''
     Target word: {TARGET_WORD}
     User input: {user_input}
     Feedback: {feedback}
@@ -154,7 +185,7 @@ def check_word():
     # Ermitteln des finalen Worts
     final_word = TARGET_WORD if len(possible_words_yellow_filtered) <= 1 else None
 
-    print(f'''
+    logging.debug(f'''
     NACH REMOVE!
     New Target word: {TARGET_WORD}
     Final word: {final_word}
@@ -174,4 +205,16 @@ def check_word():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    try:
+        app.run()
+        print("Beachte http:// und nicht https:// in der URL.")
+    except Exception as e:
+        logging.error("Die App konnte nicht gestartet werden. Wahrscheinlich ist der 5000er Port nicht frei \n" + str(e))
+        try:
+            app.run(port=5001)
+        except Exception as e:
+            logging.error("Die App konnte nicht mit anderen Port gestartet werden. Bitte Port angeben, wenn dass das Problem war. \n" + str(e))
+            print("Bitte die app.log Datei überprüfen.")
+            exit(1)
+
+    logging.info("App ended")
