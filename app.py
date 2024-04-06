@@ -3,6 +3,7 @@ from random import choice
 import re
 import logging
 from os import access, R_OK, stat
+from sys import exit
 
 app = None
 
@@ -28,6 +29,7 @@ logging.info("App sollte Berechtigung haben Dateien in aktuellen Verzeichnis zu 
 possible_words = []
 TARGET_WORD = ""
 final_word = None
+pattern_yellow_array = []
 
 
 def getWordListFromFile():
@@ -103,6 +105,7 @@ def check_word():
     global TARGET_WORD  # import Target word
     global possible_words  # import possible words
     global final_word  # import final word
+    global pattern_yellow_array  # import pattern yellow array
 
     user_input = request.json['word'].upper()  # import user input
     cell_row = request.json['cell_row']  # Empfangen der cell_row Information vom Frontend
@@ -116,7 +119,6 @@ def check_word():
     # RegEx-Pattern
     # Initialisieren der Regex-Patterns
     pattern_green = "^"  # Für korrekte Buchstaben an der richtigen Stelle
-    pattern_yellow_array = []  # Für korrekte Buchstaben an der falschen Stelle
 
     logging.debug("Target word: " + TARGET_WORD)
 
@@ -150,9 +152,9 @@ def check_word():
 
     # Filtern den möglichen Wörtern. User input hatte richtige Buchstaben an der falschen Stelle
     possible_words_yellow_filtered = possible_words_green_filtered.copy()
-    for char in pattern_yellow_array:
+    for yp_char in pattern_yellow_array:
         for word in possible_words_yellow_filtered:
-            if char not in word:
+            if word.count(yp_char) == 0:
                 possible_words_yellow_filtered.remove(word)
 
     # Erstellen einer Liste die Wörter besitzt, die von den User gefundene doppele Buchstaben enthält
@@ -220,9 +222,9 @@ def check_word():
 
 if __name__ == '__main__':
     try:
-        app.run()
         print("App gestartet unter http://127.0.0.1:5000/")
         print("Beachte http:// und nicht https:// in der URL.")
+        app.run()
     except Exception as e:
         logging.error(
             "Die App konnte nicht gestartet werden. Wahrscheinlich ist der 5000er Port nicht frei \n" + str(e))
