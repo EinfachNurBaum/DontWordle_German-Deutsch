@@ -1,9 +1,9 @@
-from flask import Flask, render_template, jsonify, request
-from random import choice
-import re
 import logging
+import re
 from os import access, R_OK, stat
+from random import choice
 from sys import exit
+from flask import Flask, render_template, jsonify, request
 
 app = None
 
