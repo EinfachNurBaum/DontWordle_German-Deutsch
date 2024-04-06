@@ -4,6 +4,8 @@
 
 DON'T WORDLE ist eine Variante des beliebten Worträtselspiels Wordle, bei dem du versuchen musst, das geheime Wort zu erraten. Dieses Projekt befindet sich derzeit in der Entwicklung und wird unregelmäßig weiterentwickelt.
 
+Für Linux und Windows gibt es direkt ausführbare Dateien unter: [Releases](https://github.com/EinfachNurBaum/DontWordle_German-Deutsch/releases)
+
 ## Anleitung (Aktuell)
 
 ### Anleitung zum Starten der Flask-App unter Linux
@@ -63,7 +65,7 @@ Um die Flask-App unter Linux zu starten, folgen Sie bitte den unten stehenden Sc
     ```
 
 
-### Anleitung zum Starten der Flask-App unter Windows
+### Anleitung zum Starten der Flask-App unter Windows, wenn die Exe Datei nciht funktioniert!
 
 Um die Flask-App unter Windows zu starten, befolgen Sie bitte die unten stehenden Schritte:
 
@@ -89,8 +91,6 @@ Um die Flask-App unter Windows zu starten, befolgen Sie bitte die unten stehende
    ```
    cd dist
    ```
-
-   Führen Sie die ausführbare Datei aus, um die Flask-App zu starten. Die App sollte nun auf `http://localhost:5000` oder `http://localhost:5001` verfügbar sein.
 
 5. **(Wenn die EXE nicht funktioniert) Führen Sie die app.py**
     In dem Verzeichnis mit der app.py führen Sie folgenes aus:
