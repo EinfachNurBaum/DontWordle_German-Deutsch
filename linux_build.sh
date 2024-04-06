@@ -8,11 +8,9 @@ pip install virtualenv
 
 virtualenv DontWordle
 
-echo "Bitte aktivieren Sie die Virtual Enviroment, die per Skripte von ./DontWodle/bin aktiviert werden kann."
-echo "Dann bitte nach der aktivierung Flask installieren mit 'pip install flask'"
-echo "Wenn es geklappt hat, bitte ein Input machen, egal welcher."
+source ./DontWordle/bin/activate
 
-read userInput
+pip install flask
 
 pip install pyinstaller
 
