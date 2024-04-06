@@ -4,4 +4,6 @@ cd ./dist/
 
 cp ../words.txt .
 
+cd ..
+
 touch "IN DEM DIST ORDNER IST DIE AUSFÜHRBARE DATEI".txt
