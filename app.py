@@ -29,7 +29,6 @@ logging.info("App sollte Berechtigung haben Dateien in aktuellen Verzeichnis zu 
 possible_words = []
 TARGET_WORD = ""
 final_word = None
-pattern_yellow_array = []
 
 
 def getWordListFromFile():
@@ -105,7 +104,6 @@ def check_word():
     global TARGET_WORD  # import Target word
     global possible_words  # import possible words
     global final_word  # import final word
-    global pattern_yellow_array  # import pattern yellow array
 
     user_input = request.json['word'].upper()  # import user input
     cell_row = request.json['cell_row']  # Empfangen der cell_row Information vom Frontend
@@ -119,6 +117,7 @@ def check_word():
     # RegEx-Pattern
     # Initialisieren der Regex-Patterns
     pattern_green = "^"  # Für korrekte Buchstaben an der richtigen Stelle
+    pattern_yellow_array = []  # Für korrekte Buchstaben an der falschen Stelle
 
     logging.debug("Target word: " + TARGET_WORD)
 
@@ -152,10 +151,17 @@ def check_word():
 
     # Filtern den möglichen Wörtern. User input hatte richtige Buchstaben an der falschen Stelle
     possible_words_yellow_filtered = possible_words_green_filtered.copy()
-    for yp_char in pattern_yellow_array:
-        for word in possible_words_yellow_filtered:
-            if word.count(yp_char) == 0:
-                possible_words_yellow_filtered.remove(word)
+    if len(pattern_yellow_array) > 0:
+        for yp_char in pattern_yellow_array:
+            for word in possible_words_yellow_filtered:
+               if word.count(yp_char) == 0:
+                  possible_words_yellow_filtered.remove(word)
+    
+    logging.debug(f'''\n
+                  Diese Liste sollte richtige Buchstabe an der falschen Stelle haben:
+                  Erste 20 Wörter sind: {possible_words_yellow_filtered[:20]}
+                  Letzte 20 Wörter sind: {possible_words_yellow_filtered[-20:]}
+                  ''')
 
     # Erstellen einer Liste die Wörter besitzt, die von den User gefundene doppele Buchstaben enthält
     if len(MultipleLetters) > 0:
