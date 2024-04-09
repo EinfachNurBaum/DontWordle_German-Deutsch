@@ -1,4 +1,4 @@
-import loggingpython as lp
+import logging
 import re
 from os import access, R_OK, stat
 from random import choice
@@ -6,12 +6,21 @@ from sys import exit
 from flask import Flask, render_template, jsonify, request
 
 app = None
-logger = lp.getLogger(__name__, min_loglevel=lp.LogLevel.DEBUG)
+
+try:
+    logging.basicConfig(filename='app.log', level=logging.DEBUG)  # Konfigurieren des Loggings
+    logger = logging.getLogger('werkzeug')
+    logger.setLevel(logging.WARNING)
+except Exception as e:
+    logging.error("Logging Datei access: " + str(access('app.log', R_OK)))
+    logging.error("Logging Datei stat: " + str(stat('app.log')))
+    logging.error("Die Logging Datei konnte nicht erstellt werden.\n" + str(e))
+    exit(1)
 
 try:
     app = Flask(__name__)
 except Exception as e:
-    logger.critical("Die App konnte nicht initialisiert werden.\n" + str(e))
+    logging.error("Die App konnte nicht initialisiert werden.\n" + str(e))
     exit(1)
 
 possible_words = []
@@ -24,10 +33,10 @@ def getWordListFromFile():
         with open('words.txt', 'r') as f:
             return f.read().splitlines()
     except Exception as e:
-        logger.error("Logging Datei access: " + str(access('words.txt', R_OK)))
+        logging.error("Logging Datei access: " + str(access('words.txt', R_OK)))
         if access('words.txt', R_OK):
-            logger.error("Logging Datei stat: " + str(stat('words.txt')))
-        logger.critical("Wenn könnte die Words.txt nicht gelesen, oder die Datei wurde gelöscht.\n" + str(e))
+            logging.error("Logging Datei stat: " + str(stat('words.txt')))
+        logging.error("Wenn könnte die Words.txt nicht gelesen, oder die Datei wurde gelöscht.\n" + str(e))
         print("Bitte die app.log Datei überprüfen.")
         exit(1)
 
@@ -45,11 +54,12 @@ def prepare_game_start():
     possible_words = getWordListFromFile()
 
     if len(possible_words) == 0:
-        logger.critical("No words found in words.txt")
+        logging.error("No words found in words.txt")
         print("Bitte die app.log Datei überprüfen.")
         exit(1)
 
     TARGET_WORD = choice(possible_words)
+    TARGET_WORD = "KÜCHE"
 
 
 @app.route('/')
@@ -107,7 +117,7 @@ def check_word():
     pattern_green = "^"  # Für korrekte Buchstaben an der richtigen Stelle
     pattern_yellow_array = []  # Für korrekte Buchstaben an der falschen Stelle
 
-    logger.debug(f"Target word: {TARGET_WORD}")
+    logging.debug(f"Target word: {TARGET_WORD}")
 
     for i, char in enumerate(user_input):
 
@@ -145,9 +155,9 @@ def check_word():
                if word.count(yp_char) == 0:
                   possible_words_yellow_filtered.remove(word)
     
-    logger.debug("Diese Liste sollte richtige Buchstabe an der falschen Stelle haben:")
-    logger.debug(f"Erste 20 Wörter sind: {possible_words_yellow_filtered[:20]}")
-    logger.debug(f"Letzte 20 Wörter sind: {possible_words_yellow_filtered[-20:]}")
+    logging.debug("Diese Liste sollte richtige Buchstabe an der falschen Stelle haben:")
+    logging.debug(f"Erste 20 Wörter sind: {possible_words_yellow_filtered[:20]}")
+    logging.debug(f"Letzte 20 Wörter sind: {possible_words_yellow_filtered[-20:]}")
 
     # Erstellen einer Liste die Wörter besitzt, die von den User gefundene doppele Buchstaben enthält
     if len(MultipleLetters) > 0:
@@ -162,17 +172,17 @@ def check_word():
 
     possible_words = possible_words_prepared.copy()
 
-    logger.debug(f"Target word: {TARGET_WORD}")
-    logger.debug(f"User input: {user_input}")
-    logger.debug(f"Feedback: {feedback}")
-    logger.debug(f"erste Possible words green filtered: {possible_words_green_filtered[:10]}")
-    logger.debug(f"letzte Possible words green filtered: {possible_words_green_filtered[-10:]}")
-    logger.debug(f"erste Possible words yellow filtered: {possible_words_yellow_filtered[:10]}")
-    logger.debug(f"letzte Possible words yellow filtered: {possible_words_yellow_filtered[-10:]}")
-    logger.debug(f"green pattern: {pattern_green}")
-    logger.debug(f"yellow pattern: {pattern_yellow_array}")
-    logger.debug(f"Liste der mehrmals vorkommenden Buchstaben: {MultipleLetters}")
-    logger.debug(f"len possible words yellow filtered: {len(possible_words_yellow_filtered)}")
+    logging.debug(f"Target word: {TARGET_WORD}")
+    logging.debug(f"User input: {user_input}")
+    logging.debug(f"Feedback: {feedback}")
+    logging.debug(f"erste Possible words green filtered: {possible_words_green_filtered[:10]}")
+    logging.debug(f"letzte Possible words green filtered: {possible_words_green_filtered[-10:]}")
+    logging.debug(f"erste Possible words yellow filtered: {possible_words_yellow_filtered[:10]}")
+    logging.debug(f"letzte Possible words yellow filtered: {possible_words_yellow_filtered[-10:]}")
+    logging.debug(f"green pattern: {pattern_green}")
+    logging.debug(f"yellow pattern: {pattern_yellow_array}")
+    logging.debug(f"Liste der mehrmals vorkommenden Buchstaben: {MultipleLetters}")
+    logging.debug(f"len possible words yellow filtered: {len(possible_words_yellow_filtered)}")
 
     if user_input in possible_words and len(possible_words) > 1 and final_word is None:
         possible_words.remove(
@@ -181,27 +191,27 @@ def check_word():
     # Überprüfung auf Gewinn oder Verlust und Rückgabe des finalen Worts
     if len(possible_words) == 1 and user_input == TARGET_WORD:
         game_status = 'win'
-        logger.debug(f"User win with: {TARGET_WORD}")
+        logging.debug(f"User win with: {TARGET_WORD}")
     elif cell_row == 0 and user_input != TARGET_WORD:
         game_status = 'lose'
-        logger.debug(f"User lose with: {TARGET_WORD}")
+        logging.debug(f"User lose with: {TARGET_WORD}")
     else:
         game_status = 'continue'
-        logger.debug(f"User continue")
+        logging.debug(f"User continue")
 
     TARGET_WORD = choice(possible_words)  # Wählen eines neuen Zielworts
 
     # Ermitteln des finalen Worts
     final_word = TARGET_WORD if len(possible_words_yellow_filtered) <= 1 else None
 
-    logger.debug("NACH REMOVE!")
-    logger.debug(f"New Target word: {TARGET_WORD}")
-    logger.debug(f"Final word: {final_word}")
-    logger.debug(f"game status: {game_status}")
-    logger.debug(f"len possible words yellow filtered: {len(possible_words)}")
-    logger.debug(f"len possible words: {len(possible_words)}")
-    logger.debug(f"erste 10 possible words: {possible_words[:10]}")
-    logger.debug(f"letzte 10 possible words: {possible_words[-10:]}")
+    logging.debug("NACH REMOVE!")
+    logging.debug(f"New Target word: {TARGET_WORD}")
+    logging.debug(f"Final word: {final_word}")
+    logging.debug(f"game status: {game_status}")
+    logging.debug(f"len possible words yellow filtered: {len(possible_words)}")
+    logging.debug(f"len possible words: {len(possible_words)}")
+    logging.debug(f"erste 10 possible words: {possible_words[:10]}")
+    logging.debug(f"letzte 10 possible words: {possible_words[-10:]}")
 
     return jsonify({
         'info': feedback,
@@ -212,22 +222,22 @@ def check_word():
 
 
 if __name__ == '__main__':
-    logger.info("App started")
-    logger.info("App sollte Berechtigung haben Dateien in aktuellen Verzeichnis zu lesen und zu schreiben.")
+    logging.info("App started")
+    logging.info("App sollte Berechtigung haben Dateien in aktuellen Verzeichnis zu lesen und zu schreiben.")
 
     try:
         print("App gestartet unter http://127.0.0.1:5000/")
         print("Beachte http:// und nicht https:// in der URL.")
         app.run()
     except Exception as e:
-        logger.error(
+        logging.error(
             "Die App konnte nicht gestartet werden. Wahrscheinlich ist der 5000er Port nicht frei \n" + str(e))
         try:
             app.run(port=5001)
             print("App gestartet unter http://127.0.0.1:5000/")
             print("Beachte http:// und nicht https:// in der URL.")
         except Exception as e:
-            logger.critical(
+            logging.error(
                 "Die App konnte nicht mit anderen Port gestartet werden. Bitte Port angeben, wenn dass das Problem war. \n" + str(
                     e))
             print("Bitte die app.log Datei überprüfen.")
