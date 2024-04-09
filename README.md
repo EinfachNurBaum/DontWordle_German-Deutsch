@@ -1,4 +1,4 @@
-# DON'T WORDLE (Erste Version 🔴)
+# DON'T WORDLE GERMAN - DEUTSCH(Erste Version 🔴)
 
 ## Projektbeschreibung
 
