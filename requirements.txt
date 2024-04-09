@@ -1,2 +1,2 @@
-Flask>=3.0.2
-Pyinstaller>=4.5.1
+Flask>=3.0.3
+Pyinstaller>=6.5.0
