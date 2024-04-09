@@ -16,30 +16,31 @@ Um die Flask-App unter Linux zu starten, folgen Sie bitte den unten stehenden Sc
 
 1. **Installieren Sie Virtualenv:**
    Führen Sie den folgenden Befehl aus, um Virtualenv zu installieren:
-   ```
+   ```bash
    pip install virtualenv
    ```
+
 2. **Erstellen Sie eine Virtual Environment:**
    Erstellen Sie eine neue Virtual Environment mit dem Namen "DontWordle", in den Verzeichnis wo auch die `app.py` befindet mit dem Befehl:
-   ```
+   ```bash
    virtualenv DontWordle
    ```
 
 3. **Aktivieren Sie die Virtual Environment:**
    Aktivieren Sie die Virtual Environment mit den Skripten in `./DontWordle/bin`. Unter Gnome können Sie dies mit folgendem Befehl tun:
-   ```
+   ```bash
    source ./DontWordle/bin/activate
    ```
 
 4. **Installieren Sie Flask:**
    Nach der Aktivierung der Virtual Environment installieren Sie Flask mit dem Befehl:
-   ```
+   ```bash
    pip install flask
    ```
 
 5. **Starten Sie die Flask-App:**
    Führen Sie die Flask-App mit dem folgenden Befehl aus:
-   ```
+   ```bash
    python app.py
    ```
 
@@ -47,17 +48,19 @@ Um die Flask-App unter Linux zu starten, folgen Sie bitte den unten stehenden Sc
 
 7. **(Ab jetzt Optional) Für eine Binary**
     Installieren Sie Pyinstaller mit dem folgenem Befehl:
-    ```
+    ```bash
     pip install pyinstaller
     ```
+
 8. **(Ab jetzt Optional) Builden der Binary**
     Führen Sie folgenen Befehl aus, in dem Verzeichnis wo die `app.py` und DontWordle ist:
-    ```
+    ```bash
     pyinstaller --hidden-import Flask --add-data "./words.txt:." --add-data "./static/js/*:static/js" --add-data "./static/css/*:static/css" --add-data "./static/*:static" --add-data "./templates/*:templates" --paths DontWordle/lib/python3.11/site-packages/ --onefile --console ./app.py
     ```
+
 9. **(Ab jetzt Optional) Starten der Binary**
     Öffnen sie ein Terminal in den lokalen `dist` Verzeichnis und führen sie folgenen Befehl aus:
-    ```
+    ```bash
     ./app
     ```
 
@@ -72,60 +75,77 @@ Um die Flask-App unter Windows zu starten, befolgen Sie bitte die unten stehende
 2. **Klonen Sie das Repository und wechseln Sie in das Verzeichnis:**
    Öffnen Sie ein Terminal (Powersshell) und lade sie Sie das Repository herunter unter "Code" -> "Download ZIP"
    oder Klonen Sie das Repository mit:
-   ```
+   ```bash
    git clone https://github.com/EinfachNurBaum/DontWordle_German-Deutsch.git
    cd DontWordle_German-Deutsch
    ```
 
 3. **Führen Sie das Windows-Build-Skript aus:**
    In den Ordner, mit der `app.py`, führen Sie das Windows-Build-Skript aus, indem Sie die Datei `Windows-build.ps1` ausführen. Sie können dies mit PowerShell tun:
-   ```
+   ```bash
    .\Windows-build.ps1
    ```
 
 4. **Starten Sie die Flask-App:**
    Nachdem das Skript ausgeführt wurde, navigieren Sie in das `dist`-Verzeichnis:
-   ```
+   ```bash
    cd dist
    ```
 
 5. **(Wenn die EXE nicht funktioniert) Führen Sie die `app.py`**
     In dem Verzeichnis mit der `app.py` führen Sie folgenes aus:
-    ```
+    ```bash
     python app.py
     ```
     oder 
-    ```
+    ```bash
     python3 app.py
     ```
     Die App sollte nun auf `http://localhost:5000` oder `http://localhost:5001` verfügbar sein.
+
+#### Fehlerbehebung:
+Von wenn Fehler:
+   ```bash
+   Windows-build.ps1" kann nicht
+   geladen werden, da die Ausführung von Skripts auf diesem System deaktiviert ist. Weitere Informationen finden Sie
+   unter "about_Execution_Policies" (https:/go.microsoft.com/fwlink/?LinkID=135170).
+   ```
+
+Das kann man lösen durch:
+   ```bash
+   Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted
+   ```
+Weiter mit:
+   ```bash
+   .\Windows-build.ps1
+   ```
 
 ### Anleitung zum Starten der Flask-App für Python-Kenner
 
 Wenn Sie mit Python vertraut sind, können Sie die Flask-App manuell einrichten und starten:
 
 1. **Klonen Sie das Repository und wechseln Sie in das Verzeichnis:**
-   ```
+   ```bash
    git clone https://github.com/EinfachNurBaum/DontWordle_German-Deutsch.git
    cd DontWordle_German-Deutsch
    ```
 
 2. **Erstellen und aktivieren Sie eine Virtual Environment:**
    Erstellen Sie eine Virtual Environment und aktivieren Sie sie:
-   ```
+   ```bash
    python -m venv venv
    source .\venv\Scripts\activate 
    ```
 
 3. **Installieren Sie die erforderlichen Pakete:**
    Installieren Sie Flask und andere erforderliche Pakete:
-   ```
+   ```bash
    pip install -r requirements.txt
    ```
 
 4. **Starten Sie die Flask-App:**
    Führen Sie die Flask-App aus:
-   ```
+   ```bash
    python app.py
    ```
 
