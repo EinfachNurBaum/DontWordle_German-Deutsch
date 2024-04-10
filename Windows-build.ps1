@@ -6,7 +6,7 @@ $userInput = Read-Host
 
 pip install virtualenv
 
-virtualenv DontWordle
+python -m virtualenv DontWordle
 
 cd .\DontWordle\Scripts\
 
@@ -26,7 +26,7 @@ cd .\dist\
 # Kopiere die words.txt-Datei in das dist-Verzeichnis
 Copy-Item ..\words.txt .
 
-# Wechsle zurück in das Übergeordnete Verzeichnis
+# Wechsle zurÃ¼ck in das Ãœbergeordnete Verzeichnis
 cd ..
 
 # Erstelle eine neue Textdatei mit einer Nachricht im dist-Verzeichnis
