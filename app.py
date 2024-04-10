@@ -59,7 +59,6 @@ def prepare_game_start():
         exit(1)
 
     TARGET_WORD = choice(possible_words)
-    TARGET_WORD = "KÜCHE"
 
 
 @app.route('/')
