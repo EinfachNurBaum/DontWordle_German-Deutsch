@@ -59,6 +59,8 @@ def prepare_game_start():
         exit(1)
 
     TARGET_WORD = choice(possible_words)
+    TARGET_WORD = "KÜCHE"
+
 
 @app.route('/')
 def home():
@@ -146,13 +148,13 @@ def check_word():
     possible_words_green_filtered = [word for word in possible_words if re.fullmatch(pattern_green, word)]
 
     # Filtern den möglichen Wörtern. User input hatte richtige Buchstaben an der falschen Stelle
-    possible_words_yellow_filtered = possible_words_green_filtered.copy()
+    possible_words_yellow_filtered = []
     if len(pattern_yellow_array) > 0:
         for yp_char in pattern_yellow_array:
-            for word in possible_words_yellow_filtered:
-               if word.count(yp_char) == 0:
-                  possible_words_yellow_filtered.remove(word)
-    
+            for word in possible_words_green_filtered:
+                if word.count(yp_char) == 1:
+                    possible_words_yellow_filtered.append(word)
+
     logging.debug("Diese Liste sollte richtige Buchstabe an der falschen Stelle haben:")
     logging.debug(f"Erste 20 Wörter sind: {possible_words_yellow_filtered[:20]}")
     logging.debug(f"Letzte 20 Wörter sind: {possible_words_yellow_filtered[-20:]}")
@@ -166,7 +168,7 @@ def check_word():
                     if word not in possible_words_prepared:
                         possible_words_prepared.append(word)
     else:
-        possible_words_prepared = possible_words_yellow_filtered.copy()
+        possible_words_prepared = possible_words_yellow_filtered
 
     possible_words = possible_words_prepared.copy()
 
