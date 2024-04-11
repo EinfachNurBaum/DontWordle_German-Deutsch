@@ -4,6 +4,7 @@ from os import access, R_OK, stat
 from random import choice
 from sys import exit
 from flask import Flask, render_template, jsonify, request
+from flask_sqlalchemy import SQLAlchemy
 
 app = None
 
@@ -28,22 +29,35 @@ TARGET_WORD = ""
 final_word = None
 
 
-def getWordListFromFile():
+db = SQLAlchemy()
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///../database/dontwordle.db'
+db.init_app(app)
+
+
+class Word(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    word = db.Column(db.String(5), nullable=False, unique=True)
+
+
+def create_tables():
+    with app.app_context():
+        db.create_all()
+
+
+def getWordListFromDB():
     try:
-        with open('words.txt', 'r') as f:
-            return f.read().splitlines()
+        with app.app_context():
+            words = Word.query.all()
+            return [word.word for word in words]
     except Exception as e:
-        logging.error("Logging Datei access: " + str(access('words.txt', R_OK)))
-        if access('words.txt', R_OK):
-            logging.error("Logging Datei stat: " + str(stat('words.txt')))
-        logging.error("Wenn könnte die Words.txt nicht gelesen, oder die Datei wurde gelöscht.\n" + str(e))
-        print("Bitte die app.log Datei überprüfen.")
-        exit(1)
+        logging.error("Fehler beim Abrufen der Wörter aus der Datenbank: " + str(e))
+        return []
 
 
 @app.route('/get_word_list')
 def get_word_list():
-    liste = getWordListFromFile()
+    liste = getWordListFromDB()
     return jsonify({'word_list': liste})
 
 
@@ -51,10 +65,10 @@ def prepare_game_start():
     global possible_words
     global TARGET_WORD
 
-    possible_words = getWordListFromFile()
+    possible_words = getWordListFromDB()
 
     if len(possible_words) == 0:
-        logging.error("No words found in words.txt")
+        logging.error("No words found in database/dontwordle.db")
         print("Bitte die app.log Datei überprüfen.")
         exit(1)
 
