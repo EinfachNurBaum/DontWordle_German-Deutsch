@@ -4,6 +4,7 @@ from os import access, R_OK, stat
 from random import choice
 from sys import exit
 from flask import Flask, render_template, jsonify, request
+import sqlite3 as sql
 
 app = None
 
@@ -30,13 +31,17 @@ final_word = None
 
 def getWordListFromFile():
     try:
-        with open('words.txt', 'r') as f:
-            return f.read().splitlines()
+        conn = sql.connect('dontwordle.db')
+        cursor = conn.cursor()
+        cursor.execute("SELECT word FROM word")
+        words = cursor.fetchall()
+        conn.close()
+        return [str(word[0]) for word in words]
     except Exception as e:
-        logging.error("Logging Datei access: " + str(access('words.txt', R_OK)))
-        if access('words.txt', R_OK):
-            logging.error("Logging Datei stat: " + str(stat('words.txt')))
-        logging.error("Wenn könnte die Words.txt nicht gelesen, oder die Datei wurde gelöscht.\n" + str(e))
+        logging.error("Logging Datei access: " + str(access('dontwordle.db', R_OK)))
+        if access('dontwordle.db', R_OK):
+            logging.error("Logging Datei stat: " + str(stat('dontwordle.db')))
+        logging.error("Es könnte die dontwordle.db nicht gelesen werden, oder die Datei wurde gelöscht.\n" + str(e))
         print("Bitte die app.log Datei überprüfen.")
         exit(1)
 
@@ -44,6 +49,7 @@ def getWordListFromFile():
 @app.route('/get_word_list')
 def get_word_list():
     liste = getWordListFromFile()
+    print(liste[:50], '\n\n', type(liste[0]))
     return jsonify({'word_list': liste})
 
 
@@ -54,7 +60,7 @@ def prepare_game_start():
     possible_words = getWordListFromFile()
 
     if len(possible_words) == 0:
-        logging.error("No words found in words.txt")
+        logging.error("No words found in dontwordle.db")
         print("Bitte die app.log Datei überprüfen.")
         exit(1)
 
