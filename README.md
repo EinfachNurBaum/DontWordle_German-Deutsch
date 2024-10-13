@@ -161,7 +161,7 @@ Für Entwickler und technisch Interessierte bieten wir eine kurze Übersicht üb
   - Das Frontend bietet das Feature von Darkmode und Lightmode an.
   - Für die Animation wird Anime.js genutzt
 
-- **Backend**: Das Backend verwendet Flask, ein Python-Framework, um die Kommunikation von Frontend und Backend zu verwalten. Die Kommunikation zwischen Frontend und Backend erfolgt über nur über POST-Anfragen, zudem verwaltet es auch denn Rate-Prozess, also welches Wort Sie raten müssen, was Sie richtig haben und co.
+- **Backend**: Das Backend verwendet Flask, ein Python-Framework, um die Kommunikation von Frontend und Backend zu verwalten. Die Kommunikation zwischen Frontend und Backend erfolgt über nur über POST-Anfragen, zudem verwaltet es auch den Rate-Prozess, also welches Wort Sie raten müssen, was Sie richtig haben und co.
 
 - **Datenbank**: Die Datenbank ist aktuell in der TXT Version, weil eine TXT sich am leichtesten lesen und öffnen lässt.
   
