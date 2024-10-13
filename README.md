@@ -104,7 +104,7 @@ Um die Flask-App unter Windows zu starten, befolgen Sie bitte die unten stehende
     Die App sollte nun auf `http://localhost:5000` oder `http://localhost:5001` verfügbar sein.
 
 #### Fehlerbehebung:
-Von wenn der Fehler `Ausführung von Skripts auf diesem System deaktiviert` kommt:
+Wenn der Fehler `Ausführung von Skripts auf diesem System deaktiviert` kommt:
    ```bash
    Pfadt/zu/der/Datei/Windows-build.ps1" kann nicht
    geladen werden, da die Ausführung von Skripts auf diesem System deaktiviert ist. Weitere Informationen finden Sie
