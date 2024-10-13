@@ -106,7 +106,7 @@ Um die Flask-App unter Windows zu starten, befolgen Sie bitte die unten stehende
 #### Fehlerbehebung:
 Wenn der Fehler `Ausführung von Skripts auf diesem System deaktiviert` kommt:
    ```bash
-   Pfadt/zu/der/Datei/Windows-build.ps1" kann nicht
+   Pfad/zu/der/Datei/Windows-build.ps1" kann nicht
    geladen werden, da die Ausführung von Skripts auf diesem System deaktiviert ist. Weitere Informationen finden Sie
    unter "about_Execution_Policies" (https:/go.microsoft.com/fwlink/?LinkID=135170).
    ```
