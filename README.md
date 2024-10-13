@@ -157,7 +157,7 @@ Wenn Sie mit Python vertraut sind, können Sie die Flask-App manuell einrichten 
 
 Für Entwickler und technisch Interessierte bieten wir eine kurze Übersicht über die technische Seite des Projekts:
 
-- **Frontend**: Das Frontend ist mit HTML, CSS und JavaScript entwickelt. Die Benutzeroberfläche verwendet Grid Layouts und Flexbox für ein ansprechendes Design. Das Design habe ich zu großteils mit ChatGPT gemacht, weil ich keinen Bock habe das Frontend selber zumacheb.
+- **Frontend**: Das Frontend ist mit HTML, CSS und JavaScript entwickelt. Die Benutzeroberfläche verwendet Grid Layouts und Flexbox für ein ansprechendes Design.
   - Das Frontend bietet das Feature von Darkmode und Lightmode an.
   - Für die Animation wird Anime.js genutzt
 
